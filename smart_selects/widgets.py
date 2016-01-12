@@ -13,12 +13,6 @@ import json
 
 from smart_selects.utils import unicode_sorter, sort_results
 
-try:
-    from django.apps import apps
-    get_model = apps.get_model
-except ImportError:
-    from django.db.models.loading import get_model
-
 if django.VERSION >= (1, 2, 0) and getattr(settings, 'USE_DJANGO_JQUERY', True):
     USE_DJANGO_JQUERY = True
 else:
@@ -160,7 +154,7 @@ class ChainedSelect(Select):
                         filter = {self.chained_model_field + "__in": pks}
                     except:  # give up
                         filter = {}
-            filtered = list(get_model(self.to_app_name, self.to_model_name).objects.filter(**filter).distinct())
+            filtered = list(queryset.filter(**filter).distinct())
             sort_results(filtered)
         else:
             # invalid value for queryset
